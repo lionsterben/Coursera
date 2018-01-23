@@ -1,0 +1,151 @@
+import java.util.Iterator;
+import edu.princeton.cs.algs4.StdIn;
+/**
+ * Created by david on 2017/11/10.
+ */
+public class caogao<Item> implements Iterable<Item> {
+    //用两个栈来维护两头
+    private Item[] a;
+    private Item[] b;
+    private int start1;
+    private int start2;
+    private int end1;
+    private int end2;
+    public Deque() {
+        // construct an empty deque
+        a = (Item[]) new Object[2];
+        b = (Item[]) new Object[2];
+        start1 = 0;
+        start2 = 0;
+        end1 = 0;
+        end2 = 0;
+    }
+    public boolean isEmpty(){
+        // is the deque empty?
+        return get_length(start1,end1) == 0 && get_length(start2,end2) == 0;
+    }
+    public Item test(){
+        return b[0];
+    }
+    private int get_length(int start,int end){
+        assert end >= start;
+        return end - start;
+    }
+
+    public int size(){
+        // return the number of items on the deque
+        return get_length(start1,end1) + get_length(start2,end2 );
+    }
+    private void resize(int capacity,int size,int num){
+        assert capacity >= size;
+        Item[] temp = (Item[]) new Object[capacity];
+        //Item[] re;
+        if (num == 0) {
+            for (int i = start1; i < end1; i++) {
+                temp[i] = a[i];
+            }
+            a = temp;
+        }
+        else if(num == 1){
+            for (int i = start2; i < end2; i++) {
+                temp[i] = b[i];
+            }
+            b = temp;
+        }
+
+    }
+    public void addFirst(Item item){
+        // add the item to the front
+        //往a里加
+        if(item == null) throw new java.lang.IllegalArgumentException();
+        if (end1 == a.length) resize(2*a.length,a.length,0);
+        a[end1] = item;
+        end1 += 1;
+    }
+
+    public void addLast(Item item){
+        // add the item to the end
+        if(item == null) throw new java.lang.IllegalArgumentException();
+        if (end2 == b.length) resize(2*b.length,b.length,0);
+        b[end2++] = item;
+
+    }
+    public Item removeFirst() {
+        // remove and return the item from the front
+        if(isEmpty()) throw new java.util.NoSuchElementException();
+        if(get_length(start1,end1) != 0){
+            Item item = a[end1-1];
+            a[end1 - 1] = null;
+            end1--;
+            if(get_length(start1,end1) > 0 &&get_length(start1,end1) == a.length/4) resize(a.length/2,a.length,0);
+            return item;
+        }
+        else{
+            Item item = b[start2];
+            b[start2] = null;
+            start2--;
+            if(start2 > b.length/2) resize(b.length,b.length,1);
+            return item;
+
+        }
+    }
+    public Item removeLast(){
+        // remove and return the item from the end
+        if(isEmpty()) throw new java.util.NoSuchElementException();
+        if(get_length(start2,end2) != 0){
+            Item item = b[end2-1];
+            b[end2 - 1] = null;
+            end2--;
+            if(get_length(start2,end2) > 0 &&get_length(start2,end2) == b.length/4) resize(b.length/2,b.length,1);
+            return item;
+        }
+        else{
+            Item item = a[start1];
+            a[start1] = null;
+            start1--;
+            if(start1 > a.length/2) resize(a.length,a.length,0);
+            return item;
+        }
+    }
+    public Iterator<Item> iterator(){
+        // return an iterator over items in order from front to end
+        return new DequeueIterator();
+    }
+    private class DequeueIterator implements Iterator<Item>{
+        private int i;
+        private int j;
+        public DequeueIterator(){
+            i = end1 - 1;
+            j = start2;
+        }
+        public boolean hasNext(){
+            return i >= start1 || j < end2;
+        }
+        public void remove(){
+            throw new UnsupportedOperationException();
+        }
+        public Item next(){
+            if(!hasNext()) throw  new java.util.NoSuchElementException();
+            if (i >= start1){
+                return a[i--];
+            }
+            else{
+                return b[j++];
+            }
+        }
+    }
+    public static void main(String[] args){
+        // unit testing (optional)
+        Deque<Integer> a = new Deque<Integer>();
+        a.addFirst(1);
+        //a.addFirst(2);
+        //a.addFirst(3);
+        a.addLast(4);
+        a.addLast(5);
+        //StdIn(a.removeFirst());
+        System.out.println(a.removeLast());
+        System.out.println(a.removeFirst());
+        //System.out.println(a.removeFirst());
+        //System.out.println(a.test());
+    }
+}
