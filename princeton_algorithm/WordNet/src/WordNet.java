@@ -26,7 +26,7 @@ public class WordNet {
         id_str = new ST<>();
         //graph = new Digraph()
         while(!word_set.isEmpty()){
-            String temp = word_set.readLine();;
+            String temp = word_set.readLine();
             String[] parse = temp.split(",");
             Integer id = Integer.parseInt(parse[0]);
             id_name.put(id,new Queue<String>());
@@ -71,12 +71,12 @@ public class WordNet {
     public String sap(String nounA, String nounB){
         // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
         // in a shortest ancestral path (defined below)
+		if(nounA == null || nounB == null) throw new IllegalArgumentException("illegal");
         int id = find.ancestor(name_id.get(nounA),name_id.get(nounB));
         return id_str.get(id);
     }
 
     public static void main(String[] args){
-
     }
 
 }
