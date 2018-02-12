@@ -1,16 +1,10 @@
 fun is_older (xs : int*int*int, ys : int*int*int) = 
 	if #1 xs  <> #1 ys
-	then if #1 xs < #1 ys
-		then true
-		else false
+	then #1 xs < #1 ys
 	else if #2 xs <> #2 ys
-		then if #2 xs < #2 ys
-			then true
-			else false
+		then #2 xs < #2 ys
 		else if #3 xs <> #3 ys
-			then if #3 xs < #3 ys
-				then true
-				else false
+			then #3 xs < #3 ys
 			else false
 
 fun number_in_month(date_list : (int*int*int) list, month : int) = 
@@ -122,12 +116,8 @@ fun reasonable_date(date : int*int*int) =
 		if year > 0
 		then if month > 0 andalso month < 13
 			then if is_leapyear year
-				then if day >0 andalso day <= get_int(leap_month_day,month)
-					then true
-					else false
-				else if day > 0 andalso day <= get_int(regular_month_day,month)
-					then true
-					else false
+				then day >0 andalso day <= get_int(leap_month_day,month)
+				else day > 0 andalso day <= get_int(regular_month_day,month)
 			else false
 		else false
 	end
